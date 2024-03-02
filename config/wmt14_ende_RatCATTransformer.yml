@@ -1,0 +1,67 @@
+model_dir: run/wmt14_ende_RatCATTransformer/
+
+params:
+  optimizer: Adam
+  optimizer_params:
+    beta_1: 0.9
+    beta_2: 0.98
+    epsilon: 0.000000001
+  learning_rate: 1.00
+  dropout: 0.1
+  label_smoothing: 0.1
+  regularization:
+    type: l2
+    scale: 1e-4
+  average_loss_in_time: true
+  mask_loss_outliers: false
+  decay_type: NoamDecay
+  decay_params:
+    model_dim: 768
+    warmup_steps: 4000
+  decay_step_duration: 1
+  start_decay_steps: 1
+  minimum_learning_rate: 0.0001
+  num_hypotheses: 1
+  beam_width: 1
+  num_hypotheses: 1
+  coverage_penalty: 0.0
+
+train:
+  batch_size: 768
+  batch_type: tokens
+  effective_batch_size: 32000
+  save_checkpoints_steps: 500
+  keep_checkpoint_max: 1000
+  save_summary_steps: 100
+  max_step: 300000
+  single_pass: false
+  maximum_features_length: 768
+  maximum_labels_length: 128
+  length_bucket_width: 1
+  sample_buffer_size: 40960
+
+eval:
+  batch_size: 128
+  batch_type: examples
+  steps: 500
+  scorers: bleu
+  save_eval_predictions: true
+
+infer:
+  batch_size: 16
+  batch_type: examples
+
+score:
+  batch_size: 128
+  batch_type: examples
+
+
+data:
+  source_vocabulary: data/ende/ende_sp.vocab.sensep-onmt
+  target_vocabulary: data/ende/ende_sp.vocab.sensep-onmt
+
+  train_features_file: data/ende/wmt14_train.en.tok.sensep.tgtCxt12345
+  train_labels_file:   data/ende/wmt14_train.de.tok
+
+  eval_features_file: data/ende/wmt14_validation.en.tok.sensep.tgtCxt12345
+  eval_labels_file:   data/ende/wmt14_validation.de.tok
